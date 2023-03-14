@@ -1,0 +1,6 @@
+1-Welcome.md
+
+venv
+*.cpython-*
+main.py
+__pycache__
