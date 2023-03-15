@@ -4,20 +4,29 @@ from .crawler_base import CrawlerBase
 class CrawlerExtraClube(CrawlerBase):
     
     def __init__(self, user, password, documento):
-        super().__init__("http://extratoclube.com.br/", documento)
+        super().__init__("http://extratoclube.com.br/", str(documento))
         self.user = user #user
         self.password = password #password
     
     def scrapy(self):
         self.realiza_login()
-        self.page.dispatch_event('#ion-overlay-1 > div.modal-wrapper.ion-overlay-wrapper.sc-ion-modal-md > app-modal-fila > ion-button', 'click')
-        self.page.dispatch_event("body > app-root > app-home > ion-app > ion-menu > ion-content > ion-list > ion-item:nth-child(2)", 'click')        
-        self.page.click('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button:nth-child(12)')
-        self.page.click('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input')
-        self.page.fill('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input > input', self.busca)
-        self.page.click('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-button')
+        
+        # clica em fechar
+        self.page.click('#ion-overlay-1 > div.modal-wrapper.ion-overlay-wrapper.sc-ion-modal-md > app-modal-fila > ion-button')
 
-        result_consulta = self.page.query_selector_all('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item')
+        # clica no menu
+        self.page.click('body > app-root > app-home > ion-app > ion-menu > ion-content > ion-list > ion-item:nth-child(2)')
+
+        # clica na aba de encontrar beneficios de um cpf
+        self.page.click('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-button:nth-child(12)')
+        
+        # coloca dados no input
+        self.page.fill('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-input > input', self.busca)
+        
+        # coleta
+        self.page.click('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-button')
+        
+        result_consulta = self.page.query_selector_all('#extratoonline > ion-row:nth-child(2) > ion-col > ion-card > ion-grid > ion-row:nth-child(2) > ion-col > ion-card > ion-item > ion-label')
         self.get_resultado_busca(result_consulta)
     
     def realiza_login(self):
@@ -34,5 +43,8 @@ class CrawlerExtraClube(CrawlerBase):
             print(f"Erro ao realizar login.\nError: {e}")
     
     def get_resultado_busca(self, resultado):
+        list_resultado = []
         for res in resultado:
-            self.resultado.append(res.inner_text())
+            list_resultado.append(resultado.append(res.inner_text()))
+        
+        self.resultado = (';').join(list_resultado)

@@ -8,16 +8,17 @@ def get_coleta():
     scrapy = CrawlerExtraClube(**req)
     try:
         scrapy.run_scrapy()
-        retorno = scrapy.consulta._consulta_dict()
+        retorno = scrapy.consulta
     except Exception as e:
+        print(e)
         retorno = {
             'msg': 'Falha ao realizar consulta'
         }
 
     return jsonify(retorno)
 
-@BLUEPRINT.route('/coleta', methods=['GET'])
-def get_resultado_coleta():
+@BLUEPRINT.route('/coleta/<id_coleta>', methods=['GET'])
+def get_resultado_coleta(id_coleta):
     return jsonify({
 
     })

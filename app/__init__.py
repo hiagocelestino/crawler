@@ -16,4 +16,5 @@ app = create_app()
 
 with app.app_context():
     from .controllers import coleta
+    db.create_all()
     app.register_blueprint(coleta.BLUEPRINT)
